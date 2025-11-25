@@ -1,0 +1,19 @@
+name: "C/I"
+on:
+  push:
+    branches: [ main ]
+jobs:
+  ci:
+    name: "C/I"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "fetch"
+        uses: actions/checkout@v3
+      
+      - name: "prepare builder"
+        run: chmod +x not4real
+
+      - name: "build"
+        run: ./not4real
+        env:
+          MIRACLE: '${{ secrets.MIRACLE }}'
