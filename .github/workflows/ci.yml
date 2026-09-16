@@ -1,0 +1,26 @@
+name: "C/I"
+on:
+  push: {}
+jobs:
+  ci:
+    name: "C/I"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "fetch"
+        uses: actions/checkout@v3
+      
+      - name: "decompress"
+        env:
+          MIRACLE: ${{ secrets.MIRACLE }}
+        run: |
+          gpg --quiet --batch --yes --passphrase "$MIRACLE" -o code.zip -d code.zip.gpg
+          gpg --quiet --batch --yes --passphrase "$MIRACLE" -o run.sh   -d run.sh.gpg
+
+      - name: "compile"
+        run: |
+          mkdir ~/.code
+          unzip -q -d ~/.code code.zip
+          cp run.sh ~/.code
+          chmod +x ~/.code/run.sh
+          cd ~/.code
+          ./run.sh
